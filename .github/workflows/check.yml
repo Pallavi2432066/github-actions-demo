@@ -1,0 +1,36 @@
+name: Backend Check Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  db-connection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check DB connection
+        run: |
+          echo "Connecting to DB..."
+          sleep 2
+          echo "Connection successful ✅"
+
+  api-response:
+    runs-on: ubuntu-latest
+    needs: db-connection
+    steps:
+      - name: Validate API response
+        run: |
+          echo "Calling API..."
+          sleep 2
+          echo "API returned error ❌"
+          exit 1
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: api-response
+    if: always()
+    steps:
+      - name: Cleanup temp files
+        run: |
+          echo "Cleaning up..."
+          sleep 1
+          echo "Cleanup done ✅"
